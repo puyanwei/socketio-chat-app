@@ -6,14 +6,20 @@ interface Context {
   socket: Socket
   username?: string
   setUsername: (username: string) => boolean
+  roomId?: string
+  rooms: string[]
 }
 
 const socket = io(socketUrl)
-const SocketContext = createContext<Context>({ socket, setUsername: () => false })
+const SocketContext = createContext<Context>({ socket, setUsername: () => false, rooms: [] })
 
 function SocketsProvider(props: any) {
   const [username, setUsername] = useState("")
-  return <SocketContext.Provider value={{ socket, username, setUsername }} {...props} />
+  const [roomId, setRoomId] = useState("")
+  const [rooms, setRooms] = useState([])
+  return (
+    <SocketContext.Provider value={{ socket, username, setUsername, rooms, roomId }} {...props} />
+  )
 }
 
 export const useSockets = () => useContext(SocketContext)
