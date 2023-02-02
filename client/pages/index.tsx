@@ -15,7 +15,7 @@ const Home: NextPage = () => {
     localStorage.setItem("username", value)
   }
 
-  if (!username)
+  if (!username?.trim())
     return (
       <div>
         <input placeholder="Enter your username" ref={usernameRef} />

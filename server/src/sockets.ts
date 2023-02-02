@@ -7,10 +7,12 @@ const events = {
   connection: "connection",
   client: {
     createRoom: "createRoom",
+    sendMessage: "sendMessage",
   },
   server: {
     showAllRooms: "showAllRooms",
     joinedRoom: "joinedRoom",
+    roomMessage: "roomMessage",
   },
 }
 
@@ -31,10 +33,20 @@ export function runSockets({ io }: { io: Server }) {
         name: roomName,
       }
 
-      console.log({ rooms })
       socket.join(roomId)
       socket.emit(events.server.showAllRooms, rooms)
       socket.emit(events.server.joinedRoom, roomId)
+    })
+
+    socket.on(events.client.sendMessage, ({ roomId, message, username }) => {
+      console.log(`client ${socket.id} sent message ${message}`)
+      const time = `${new Date().getHours()}:${new Date().getMinutes()}`
+
+      socket.to(roomId).emit(events.server.roomMessage, {
+        username,
+        message,
+        time,
+      })
     })
   })
 }
