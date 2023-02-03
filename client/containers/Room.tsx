@@ -3,7 +3,7 @@ import { useSockets } from "../context/socket.context"
 import { events } from "../consts"
 
 export function Room() {
-  const { socket, messages = [], setMessages, roomId, username } = useSockets()
+  const { socket, messages = [], setMessages, roomId, username, rooms } = useSockets()
   const messageRef = useRef<HTMLTextAreaElement>(null)
 
   function handleSendMessage() {
@@ -28,10 +28,12 @@ export function Room() {
         <p key={index}>{message}</p>
       ))}
 
-      <div>
-        <textarea rows={1} placeholder="Type your message here" ref={messageRef} />
-        <button onClick={handleSendMessage}>Send</button>
-      </div>
+      {!!rooms.length && (
+        <div>
+          <textarea rows={1} placeholder="Type your message here" ref={messageRef} />
+          <button onClick={handleSendMessage}>Send</button>
+        </div>
+      )}
     </div>
   )
 }

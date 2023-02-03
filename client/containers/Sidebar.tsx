@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import { FormEvent, useRef } from "react"
 import { useSockets } from "../context/socket.context"
 import { events } from "../consts"
 
@@ -16,15 +16,30 @@ export function Sidebar() {
     roomRef.current.value = ""
   }
 
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    handleRoomCreation()
+  }
+
+  function handleJoinRoom(id: string) {
+    if (id === roomId) return
+    socket.emit(events.client.joinRoom, { roomId: id })
+  }
+
   return (
     <nav>
-      <div>
+      <form onSubmit={handleSubmit}>
         <input placeholder="Room name" ref={roomRef} />
         <button onClick={handleRoomCreation}>Create Room</button>
-      </div>
+      </form>
 
-      {Object.keys(rooms).map((id) => (
-        <div key={id}>{rooms[id].name}</div>
+      {rooms?.map(({ roomId: id, name }) => (
+        <div key={id}>
+          {name}
+          <button disabled={id === roomId} onClick={() => handleJoinRoom(id)}>
+            Join {name}
+          </button>
+        </div>
       ))}
     </nav>
   )

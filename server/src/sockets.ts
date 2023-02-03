@@ -3,11 +3,12 @@ import { nanoid } from "nanoid"
 
 // nanoid v4 is not supported on node - https://github.com/ai/nanoid/issues/365#issuecomment-1167075436, so have to use v3
 
-const events = {
+export const events = {
   connection: "connection",
   client: {
     createRoom: "createRoom",
     sendMessage: "sendMessage",
+    joinRoom: "joinRoom",
   },
   server: {
     showAllRooms: "showAllRooms",
@@ -16,22 +17,28 @@ const events = {
   },
 }
 
-const rooms: Record<string, { name: string }> = {}
+interface Room {
+  roomId: string
+  name: string
+}
+
+const rooms: Room[] = []
 
 export function runSockets({ io }: { io: Server }) {
-  console.log(`sockets is enabled`)
+  console.warn(`sockets is enabled`)
 
   io.on(events.connection, (socket: Socket) => {
-    console.log(`socket connected: ${socket.id}`)
+    console.warn(`socket connected: ${socket.id}`)
 
     socket.on(events.client.createRoom, ({ roomName }) => {
-      console.log(`client ${socket.id} created room ${roomName}`)
+      console.warn(`client ${socket.id} created room ${roomName}`)
 
       const roomId = nanoid()
 
-      rooms[roomId] = {
+      rooms.push({
+        roomId: socket.id,
         name: roomName,
-      }
+      })
 
       socket.join(roomId)
       socket.emit(events.server.showAllRooms, rooms)
@@ -47,6 +54,11 @@ export function runSockets({ io }: { io: Server }) {
         message,
         time,
       })
+    })
+
+    socket.on(events.client.joinRoom, ({ roomId }) => {
+      socket.join(roomId)
+      socket.emit(events.server.joinedRoom, roomId)
     })
   })
 }

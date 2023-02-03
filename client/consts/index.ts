@@ -3,6 +3,7 @@ export const events = {
   client: {
     createRoom: "createRoom",
     sendMessage: "sendMessage",
+    joinRoom: "joinRoom",
   },
   server: {
     showAllRooms: "showAllRooms",

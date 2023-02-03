@@ -1,4 +1,5 @@
 import type { NextPage } from "next"
+import { FormEvent, KeyboardEvent } from "react"
 import { useSockets } from "../context/socket.context"
 import { Sidebar } from "../containers/Sidebar"
 import { Room } from "../containers/Room"
@@ -15,12 +16,17 @@ const Home: NextPage = () => {
     localStorage.setItem("username", value)
   }
 
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    handleUsername()
+  }
+
   if (!username?.trim())
     return (
-      <div>
+      <form onSubmit={handleSubmit}>
         <input placeholder="Enter your username" ref={usernameRef} />
         <button onClick={handleUsername}>Submit</button>
-      </div>
+      </form>
     )
 
   return (

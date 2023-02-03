@@ -10,7 +10,7 @@ interface Context {
   messages?: Message[]
   setMessages: (messages: Message[]) => boolean
   roomId?: string
-  rooms: Record<string, { name: string }>
+  rooms: Room[]
 }
 
 interface Message {
@@ -19,11 +19,16 @@ interface Message {
   time: string
 }
 
+interface Room {
+  roomId: string
+  name: string
+}
+
 const socket = io(socketUrl)
 const SocketContext = createContext<Context>({
   socket,
   setUsername: () => false,
-  rooms: {},
+  rooms: [],
   setMessages: ([]) => false,
   messages: [],
 })
@@ -31,7 +36,7 @@ const SocketContext = createContext<Context>({
 function SocketsProvider(props: any) {
   const [username, setUsername] = useState("")
   const [roomId, setRoomId] = useState("")
-  const [rooms, setRooms] = useState({})
+  const [rooms, setRooms] = useState([])
   const [messages, setMessages] = useState<Message[]>([])
 
   socket.on(events.server.showAllRooms, (value) => setRooms(value))
