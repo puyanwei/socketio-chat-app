@@ -25,8 +25,6 @@ interface Room {
 const rooms: Room[] = []
 
 export function runSockets({ io }: { io: Server }) {
-  console.warn(`sockets is enabled`)
-
   io.on(events.connection, (socket: Socket) => {
     console.warn(`socket connected: ${socket.id}`)
 
@@ -46,7 +44,7 @@ export function runSockets({ io }: { io: Server }) {
     })
 
     socket.on(events.client.sendMessage, ({ roomId, message, username }) => {
-      console.log(`client ${socket.id} sent message ${message}`)
+      console.warn(`client ${socket.id} sent message ${message}`)
       const time = `${new Date().getHours()}:${new Date().getMinutes()}`
 
       socket.to(roomId).emit(events.server.roomMessage, {

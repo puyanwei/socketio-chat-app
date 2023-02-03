@@ -1,6 +1,7 @@
 import { FormEvent, useRef } from "react"
 import { useSockets } from "../context/socket.context"
 import { events } from "../consts"
+import { getRoomName } from "./Room"
 
 export function Sidebar() {
   const { socket, roomId, rooms } = useSockets()
@@ -33,14 +34,17 @@ export function Sidebar() {
         <button onClick={handleRoomCreation}>Create Room</button>
       </form>
 
-      {rooms?.map(({ roomId: id, name }) => (
-        <div key={id}>
-          {name}
-          <button disabled={id === roomId} onClick={() => handleJoinRoom(id)}>
-            Join {name}
-          </button>
-        </div>
-      ))}
+      {rooms?.map(({ roomId: id, name }) => {
+        const currentRoom = getRoomName(rooms, id)
+        return (
+          <div key={id}>
+            {name}
+            <button disabled={currentRoom !== name} onClick={() => handleJoinRoom(id)}>
+              Join {name}
+            </button>
+          </div>
+        )
+      })}
     </nav>
   )
 }
