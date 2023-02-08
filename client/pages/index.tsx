@@ -6,7 +6,7 @@ import { Room } from "../containers/Room"
 import { useRef } from "react"
 
 const Home: NextPage = () => {
-  const { socket, username, setUsername } = useSockets()
+  const { username, setUsername } = useSockets()
   const usernameRef = useRef<HTMLInputElement>(null)
 
   function handleUsername() {
@@ -24,8 +24,12 @@ const Home: NextPage = () => {
   if (!username?.trim())
     return (
       <form onSubmit={handleSubmit}>
+        <h1 className="text-red-500 underline">HELLO</h1>
+
         <input placeholder="Enter your username" ref={usernameRef} />
-        <button onClick={handleUsername}>Submit</button>
+        <button className="underline bold" onClick={handleUsername}>
+          Submit
+        </button>
       </form>
     )
 
