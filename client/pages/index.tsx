@@ -21,22 +21,23 @@ const Home: NextPage = () => {
     handleUsername()
   }
 
-  if (!username?.trim())
-    return (
-      <form onSubmit={handleSubmit}>
-        <h1 className="text-red-500 underline">HELLO</h1>
-
-        <input placeholder="Enter your username" ref={usernameRef} />
-        <button className="underline bold" onClick={handleUsername}>
-          Submit
-        </button>
-      </form>
-    )
-
   return (
     <div>
-      <Sidebar />
-      <Room />
+      {!!username?.trim() ? (
+        <div>
+          <Sidebar />
+          <Room />
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <h1 className="text-red-500 underline">HELLO</h1>
+
+          <input placeholder="Enter your username" ref={usernameRef} />
+          <button className="underline bold" onClick={handleUsername}>
+            Submit
+          </button>
+        </form>
+      )}
     </div>
   )
 }
